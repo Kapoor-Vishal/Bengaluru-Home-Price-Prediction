@@ -534,33 +534,42 @@ with tab_report:
             st.info("Install dependencies: `pip install reportlab kaleido` and ensure write permissions in the folder.")
 
 # Footer note
-footer="""<style>
-a:link , a:visited{
-color: blue;
-background-color: transparent;
-text-decoration: underline;
-}
-
-a:hover, a:active {
-color: red;
-background-color: transparent;
-text-decoration: underline;
-}
-
+footer = """
+<style>
 .footer {
-position: fixed;
-left: 0;
-bottom: 0;
-width: 100%;
-background-color: white;
-color: black;
-text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    text-align: center;
+    padding: 12px 0;
+    font-size: 14px;
+    border-top: 1px solid rgba(49,51,63,0.2);
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+}
+
+.footer a {
+    text-decoration: none;
+    padding: 6px 12px;
+    margin: 0 6px;
+    border-radius: 20px;
+    background: rgba(49, 51, 63, 0.05);
+    color: var(--primary-color);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.footer a:hover {
+    background: var(--primary-color);
+    color: white !important;
 }
 </style>
+
 <div class="footer">
-<p>Created by <a href="https://www.linkedin.com/in/vishal--kapoor/" target="_blank">Vishal Kapoor</a> | 
+<p>🚀 Created by <a href="https://www.linkedin.com/in/vishal--kapoor/" target="_blank">Vishal Kapoor</a> | 
 <a href="https://github.com/Kapoor-Vishal" target="_blank">GitHub</a></p>
 </div>
 """
-st.markdown(footer,unsafe_allow_html=True)
-
+st.markdown(footer, unsafe_allow_html=True
