@@ -4,7 +4,7 @@ What’s the price of a 3BHK in Indiranagar? Is that Koramangala flat worth the 
 
 This project takes a data science approach to bring some clarity. Using a publicly available dataset and machine learning, I built a model that predicts house prices in Bengaluru, wrapped it all up in an interactive Streamlit web app, and deployed it online so anyone can test it out in real time.
 
-👉 Live Demo: Try the App Here
+👉 Live Demo: https://bengaluru-home-price-prediction-fryrrrr5lau9eyxp25556i.streamlit.app/
 
 🎯 Motivation
 
@@ -98,8 +98,6 @@ Run the app:
 streamlit run app.py
 
 
-Open in browser → http://localhost:8501
-
 📦 Deployment
 
 Deployment is handled via Streamlit Cloud. Just connect the repo, include requirements.txt and .streamlit/config.toml, and Streamlit spins up the app with a shareable URL.
@@ -117,3 +115,10 @@ Deployment, caching, theming, and PDF reporting are not just add-ons — they’
 Dataset → Bengaluru House Price Data (Kaggle by Amitabh Ajoy)
 
 Tools → Streamlit, Pandas, NumPy, Scikit-learn, Plotly, ReportLab
+
+## 📬 Contact  
+
+Vishal Kapoor
+📧 Email: vishalkapoor9803@gmail.com  
+🔗 LinkedIn: https://www.linkedin.com/in/vishal--kapoor/  
+🐙 GitHub: https://github.com/Kapoor-Vishal 
