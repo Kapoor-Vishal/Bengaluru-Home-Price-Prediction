@@ -1,7 +1,8 @@
 [theme]
-base = "dark"                        # Force dark mode
-primaryColor = "#8A9CF4"             # Accent color for buttons/sliders
-backgroundColor = "#0e1117"          # Main background
-secondaryBackgroundColor = "#1b1f2a" # Sidebar / cards
-textColor = "#e5e7eb"                # Light gray text
-font = "sans serif"                  # Options: "sans serif", "serif", "monospace"
+base = "dark"                        
+primaryColor = "#8A9CF4"             
+backgroundColor = "#0e1117"          
+secondaryBackgroundColor = "#1b1f2a" 
+textColor = "#e5e7eb"                
+
+font = "sans serif"                  
