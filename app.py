@@ -572,4 +572,5 @@ footer = """
 <a href="https://github.com/Kapoor-Vishal" target="_blank">GitHub</a></p>
 </div>
 """
-st.markdown(footer, unsafe_allow_html=True
+st.markdown(footer, unsafe_allow_html=True)
+
