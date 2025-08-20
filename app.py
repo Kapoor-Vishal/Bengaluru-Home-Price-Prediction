@@ -1,29 +1,13 @@
-# =========================================================
-# Bengaluru Home Price — Streamlit App (Senior-grade)
-# =========================================================
-# Requirements (install if you want PDF & image exports):
-#   pip install streamlit plotly pandas numpy reportlab kaleido
-# (PDF works without charts if kaleido/reportlab are missing)
-# Files expected in the same folder:
-#   - banglore_home_prices_model.pickle
-#   - columns.json
-#   - bangalore_home_prices_cleaned.csv  (or upload your own)
-# =========================================================
-
 import json
 import time
 import pickle
 import numpy as np
 import pandas as pd
 import streamlit as st
-
-# Plotly (theme-aware, dark-friendly)
 import plotly.express as px
 import plotly.graph_objects as go
 
-# --------------------------
 # Page setup
-# --------------------------
 st.set_page_config(
     page_title="Bengaluru Home Price",
     page_icon="🏙️",
@@ -46,9 +30,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --------------------------
 # Utilities
-# --------------------------
 def theme_template():
     base = st.get_option("theme.base")
     return "plotly_dark" if base == "dark" else "plotly"
@@ -111,14 +93,7 @@ def add_ppsf(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def build_feature_matrix(df_in: pd.DataFrame, data_columns: list) -> np.ndarray:
-    """
-    Accepts either:
-      - 'location' string column + numeric cols, or
-      - one-hot location columns aligned with data_columns
-    Returns matrix [n_samples, len(data_columns)]
-    """
     X = np.zeros((len(df_in), len(data_columns)))
-    # base cols
     X[:, 0] = df_in["total_sqft"].astype(float)
     X[:, 1] = df_in["bath"].astype(float)
     X[:, 2] = df_in["bhk"].astype(float)
@@ -129,18 +104,13 @@ def build_feature_matrix(df_in: pd.DataFrame, data_columns: list) -> np.ndarray:
                 j = data_columns.index(loc)
                 X[i, j] = 1.0
             except ValueError:
-                # unknown location → keep zeros (model will treat as baseline)
                 pass
     else:
-        # copy one-hot if present
         for j, col in enumerate(data_columns[3:], start=3):
             if col in df_in.columns:
                 X[:, j] = df_in[col].values
     return X
 
-# --------------------------
-# Cache + loaders (with toggles)
-# --------------------------
 @st.cache_resource(show_spinner=False)
 def load_model_cols(model_path: str, cols_path: str):
     with open(model_path, "rb") as f:
@@ -156,9 +126,7 @@ def load_default_csv(csv_path: str, data_columns: list, cache_buster: int = 0):
     df = add_ppsf(df)
     return df
 
-# --------------------------
 # Sidebar
-# --------------------------
 with st.sidebar:
     st.header("Settings")
     disable_cache = st.toggle("Disable cache (for debugging)", value=False)
@@ -174,9 +142,7 @@ with st.sidebar:
     st.subheader("Model Files in use")
     st.code("banglore_home_prices_model.pickle\ncolumns.json\nbangalore_home_prices_cleaned.csv", language="bash")
 
-# --------------------------
 # Load model/columns
-# --------------------------
 t0 = time.perf_counter()
 try:
     model, data_columns = load_model_cols("banglore_home_prices_model.pickle", "columns.json")
@@ -184,9 +150,7 @@ except Exception as e:
     st.error(f"Failed to load model/columns: {e}")
     st.stop()
 
-# --------------------------
 # Load dataset (default or uploaded)
-# --------------------------
 try:
     if uploaded_csv is not None:
         df = pd.read_csv(uploaded_csv)
@@ -205,9 +169,7 @@ except Exception as e:
 template = theme_template()
 load_latency_ms = (time.perf_counter() - t0) * 1000
 
-# --------------------------
 # Header
-# --------------------------
 st.title("🏙️ Bengaluru Home Price")
 st.caption(f"Data source: {data_source} • Load time: {load_latency_ms:.0f} ms")
 
@@ -216,9 +178,7 @@ tab_pred, tab_dist, tab_eda, tab_sens, tab_batch, tab_model, tab_report = st.tab
     ["🔮 Prediction", "📊 Price Distribution", "📈 EDA", "🧪 Sensitivity", "📦 Batch Predict", "🧠 Model Insights", "📄 Report (PDF)"]
 )
 
-# =========================================================
 # 🔮 Prediction
-# =========================================================
 with tab_pred:
     st.subheader("Enter House Details")
     with st.form("predict_form", clear_on_submit=False):
@@ -256,9 +216,7 @@ with tab_pred:
         )
         st.plotly_chart(fig, use_container_width=True)
 
-# =========================================================
 # 📊 Price Distribution
-# =========================================================
 with tab_dist:
     st.subheader("Average Price & PPSF by Location")
 
@@ -322,9 +280,7 @@ with tab_dist:
         mime="text/csv"
     )
 
-# =========================================================
 # 📈 EDA
-# =========================================================
 with tab_eda:
     st.subheader("Exploratory Data Analysis")
 
@@ -374,9 +330,7 @@ with tab_eda:
         mime="text/csv"
     )
 
-# =========================================================
 # 🧪 Sensitivity (Heatmap)
-# =========================================================
 with tab_sens:
     st.subheader("Sensitivity Analysis (Heatmap)")
 
@@ -432,9 +386,7 @@ with tab_sens:
     )
     st.plotly_chart(fig_hm, use_container_width=True)
 
-# =========================================================
 # 📦 Batch Predict
-# =========================================================
 with tab_batch:
     st.subheader("Batch Predictions from CSV")
     st.caption("Upload a CSV with columns: total_sqft, bath, bhk and either a 'location' column or one-hot location columns matching training.")
@@ -471,9 +423,7 @@ with tab_batch:
     else:
         st.info("Upload a CSV to run batch predictions.")
 
-# =========================================================
 # 🧠 Model Insights
-# =========================================================
 with tab_model:
     st.subheader("Model Insights")
     st.write(f"**Model type:** `{model_kind(model)}`")
@@ -505,9 +455,7 @@ with tab_model:
         unsafe_allow_html=True
     )
 
-# =========================================================
 # 📄 Report (PDF)
-# =========================================================
 with tab_report:
     st.subheader("Generate PDF Report (KPIs + Charts)")
 
@@ -586,4 +534,33 @@ with tab_report:
             st.info("Install dependencies: `pip install reportlab kaleido` and ensure write permissions in the folder.")
 
 # Footer note
-st.caption("Built with Streamlit • Theme-adaptive charts • Local ML inference")
+footer="""<style>
+a:link , a:visited{
+color: blue;
+background-color: transparent;
+text-decoration: underline;
+}
+
+a:hover, a:active {
+color: red;
+background-color: transparent;
+text-decoration: underline;
+}
+
+.footer {
+position: fixed;
+left: 0;
+bottom: 0;
+width: 100%;
+background-color: white;
+color: black;
+text-align: center;
+}
+</style>
+<div class="footer">
+<p>Created by <a href="https://www.linkedin.com/in/vishal--kapoor/" target="_blank">Vishal Kapoor</a> | 
+<a href="https://github.com/Kapoor-Vishal" target="_blank">GitHub</a></p>
+</div>
+"""
+st.markdown(footer,unsafe_allow_html=True)
+
